@@ -1,28 +1,35 @@
 const bcrypt=require("bcryptjs")
-const jwt=require("jwt")
+const jwt=require("jsonwebtoken")
 const User=require("../Model/userModel")
 
+const registerUser = async (req, res) => {
+    console.log(req.body)
+    const { regNo, email, password } = req.body;
 
-const registerUser=async (req,res)=>{
-    const {regNo,email,password}=req.body;
-    try{
-        let user=await User.findOne({email});
-        if(user){
+    try {
+        let user = await User.findOne({ email });
+
+        if (user) {
             return res.status(400).json({ msg: 'User already exists' });
         }
-        else{
-               // Hash the password before saving it to the database
+
+        // Hash the password before saving it to the database
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-            user=new User({
-                regNo,email,hashedPassword
-            })
-            await user.save();
-            const payload = {
-                user: {
-                    id: user.id
-                }
-            };
+
+        user = new User({
+            regNo,
+            email,
+            password: hashedPassword
+        });
+
+        await user.save();
+
+        const payload = {
+            user: {
+                id: user.id
+            }
+        };
 
         jwt.sign(
             payload,
@@ -33,13 +40,10 @@ const registerUser=async (req,res)=>{
                 res.json({ token });
             }
         );
-        }
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-
 };
 
 
