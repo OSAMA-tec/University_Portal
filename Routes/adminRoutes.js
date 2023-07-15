@@ -4,7 +4,7 @@ const router = express.Router();
 const {
     registerAdmin,
     loginAdmin,
-} = require('../controllers/adminController');
+} = require('../controllers/Admin/adminController');
 
 
 // Register a new user

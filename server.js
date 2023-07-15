@@ -19,8 +19,13 @@ app.use(express.json()); // for parsing application/json
 app.use(express.json()); // Middleware for parsing JSON bodies from HTTP requests
 app.use(cors()); // Enable CORS
 
-app.use('/api', require('./Routes/userRoutes'));
-app.use('/api', require('./Routes/adminRoutes'));
+
+
+
+//             USERS
+app.use('/user', require('./Routes/userRoutes'));
+//             ADMIN
+app.use('/admin', require('./Routes/adminRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
