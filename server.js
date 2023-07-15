@@ -20,7 +20,7 @@ app.use(express.json()); // Middleware for parsing JSON bodies from HTTP request
 app.use(cors()); // Enable CORS
 
 app.use('/api', require('./Routes/userRoutes'));
-// app.use('/api/admins', require('./Routes/userRoutes'));
+app.use('/api', require('./Routes/adminRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
