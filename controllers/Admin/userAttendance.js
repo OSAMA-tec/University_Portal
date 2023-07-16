@@ -1,5 +1,6 @@
 const Attendance = require("../../Model/attendanceModel")
 const User = require("../../Model/userModel")
+const {generateReport}=require('../../Utils/records')
 
 const updateAttendance = async (req, res) => {
     try {
@@ -50,6 +51,7 @@ const addAttendance = async (req, res) => {
     }
 }
 
+
 const deleteAttendance = async (req, res) => {
     const userId = req.params._id;
     const attendanceId= req.params.atid;
@@ -76,7 +78,6 @@ const deleteAttendance = async (req, res) => {
 
 
 
-
 const attendanceRecord=async (req,res)=>{
     try{
         const user=req.params._id;
@@ -84,11 +85,22 @@ const attendanceRecord=async (req,res)=>{
             res.status(404).json({msg: 'Params not found' });
         }
         const records=await Attendance.find({user:user});
-        res.status(201).json({ records,msg: 'Attendance record' });
+        let report =await  generateReport(records);
+        res.status(201).json({ report,msg: 'Attendance record' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+}
+const AllRecord=async (req,res)=>{
+    try{
+        const records=await Attendance.find();
+        let report =await  generateReport(records);
+        res.status(201).json({ report,msg: 'Attendance record' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
 }
 
-module.exports = { updateAttendance, addAttendance, deleteAttendance,attendanceRecord };
+module.exports = { updateAttendance, addAttendance, deleteAttendance,attendanceRecord,AllRecord };

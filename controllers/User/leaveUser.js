@@ -17,7 +17,6 @@ const leaveUser=async (req,res)=>{
             reason,
             status: 'Pending', 
         });
-
         const leaveRequest = await newLeaveRequest.save();
 
         res.status(201).json(leaveRequest);
