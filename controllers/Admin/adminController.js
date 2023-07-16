@@ -26,18 +26,36 @@ const registerAdmin=async (req,res)=>{
     }
 
 }
+
 const loginAdmin=async (req,res)=>{
     const {email,password}=req.body;
     try{
 
         if(!email.includes("@admin.com")){
-            return res.status(400).json({ msg: 'WRONG EMAIL' });
+            return res.status(400).json({ msg: 'WRONG EMAIL FOR ADMIN' });
         }
         else{
             let admin=await Admin.findOne({email});
+            if(!admin){
+                return res.status(400).json({ msg: 'Wrong Email!' });
+
+            }
             const isMatch=await bcrypt.compare(password,admin.password);
            if(isMatch){
-               return res.status(200).json({ msg: 'Signin Successfull!' });
+            const payload={
+                user:{
+                    id:admin.id
+                }
+            };
+            jwt.sign(
+                payload,
+                process.env.JWT_SECRET_Admin,
+                { expiresIn: '5 days' },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({ message: 'Logged in successfully',token });
+                }
+            );   
             }
             else{
                 return res.status(400).json({ msg: 'Wrong Password!' });
@@ -49,8 +67,6 @@ const loginAdmin=async (req,res)=>{
     }
 
 }
-
-
 
 module.exports = {
     registerAdmin,

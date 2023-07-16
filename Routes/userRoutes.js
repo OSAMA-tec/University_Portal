@@ -8,44 +8,25 @@ const dir = './uploads';
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
 }
-const {
-    registerUser,
-    loginUser,
-    getUserProfile
-} = require('../controllers/User/userController');
-const {
-    userAttendance,
-    getUserAttendance
-} = require('../controllers/User/userAttendance');
+const {registerUser,loginUser,getUserProfile} = require('../controllers/User/userController');
+const { userAttendance,getUserAttendance} = require('../controllers/User/userAttendance');
 const {profilePicture}=require('../controllers/User/profilePicture')
 const {leaveUser}=require('../controllers/User/leaveUser')
 
 
-const auth = require('../Middlewares/authMiddleware');
+const {auth} = require('../Middlewares/authMiddleware');
 
 // Register a new user
-router.post(
-    '/register',
-    registerUser
-);
+router.post('/register',registerUser);
 
 // Login user and get token
-router.post(
-    '/login',
-    loginUser
-);
+router.post('/login',loginUser);
 
 //attendance
-router.post(
-    '/attendance',auth,
-    userAttendance
-);
+router.post('/attendance',auth,userAttendance);
 
 //get all attendance
-router.get(
-    '/attendance',auth,
-    getUserAttendance
-);
+router.get( '/attendance',auth,getUserAttendance);
 
 // Get user profile
 router.get('/profile', auth, getUserProfile);

@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
             { expiresIn: '5 days' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token });
+                res.json({ message: 'Registered  successfully',token });
             }
         );
     } catch (err) {
@@ -73,7 +73,7 @@ const loginUser= async (req,res)=>{
                 { expiresIn: '5 days' },
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.json({message: 'Logged in successfully', token });
                 }
             );            
         }
