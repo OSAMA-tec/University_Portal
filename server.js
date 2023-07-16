@@ -3,21 +3,20 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 
-//routes importing
 
 
 const app = express();
 
-dotenv.config(); // Load environment variables
+dotenv.config(); 
 
 const connectDB = require('./Config/db');
 
 connectDB(); // Connect to MongoDB
-app.use(express.json()); // for parsing application/json
+app.use(express.json()); 
 
 
-app.use(express.json()); // Middleware for parsing JSON bodies from HTTP requests
-app.use(cors()); // Enable CORS
+app.use(express.json());
+app.use(cors()); 
 
 
 
