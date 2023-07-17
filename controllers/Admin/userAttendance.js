@@ -5,7 +5,7 @@ const {generateReport}=require('../../Utils/records')
 const updateAttendance = async (req, res) => {
     try {
         const user = req.params._id;
-        let userAttendance = await Attendance.findOne({ user: user });
+        let userAttendance = await Attendance.findById(user);
         if (!user) {
             return res.status(400).json({ msg: 'Userid not passed' });
         }
@@ -53,8 +53,8 @@ const addAttendance = async (req, res) => {
 
 
 const deleteAttendance = async (req, res) => {
-    const userId = req.params._id;
-    const attendanceId= req.params.atid;
+    const attendanceId = req.params._id;
+    const userId= req.params.atid;
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -102,5 +102,14 @@ const AllRecord=async (req,res)=>{
         res.status(500).send('Server Error');
     }
 }
+const AllAttendance=async (req,res)=>{
+    try{
+        const records=await Attendance.find();
+        res.status(201).json({ records,msg: 'Attendance record' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+}
 
-module.exports = { updateAttendance, addAttendance, deleteAttendance,attendanceRecord,AllRecord };
+module.exports = { updateAttendance, addAttendance, deleteAttendance,attendanceRecord,AllRecord,AllAttendance };

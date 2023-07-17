@@ -11,7 +11,7 @@ if (!fs.existsSync(dir)) {
 const {registerUser,loginUser,getUserProfile} = require('../controllers/User/userController');
 const { userAttendance,getUserAttendance} = require('../controllers/User/userAttendance');
 const {profilePicture}=require('../controllers/User/profilePicture')
-const {leaveUser}=require('../controllers/User/leaveUser')
+const {leaveUser,getAllleaves}=require('../controllers/User/leaveUser')
 
 
 const {auth} = require('../Middlewares/authMiddleware');
@@ -28,6 +28,7 @@ router.get( '/attendance',auth,getUserAttendance);
 router.get('/profile', auth, getUserProfile);
 //leave user
 router.post('/leave-user',auth,leaveUser);
+router.get('/leaves',auth,getAllleaves);
 
 
 //profile picture

@@ -26,4 +26,15 @@ const leaveUser=async (req,res)=>{
     }
 }
 
-module.exports={leaveUser};
+
+const getAllleaves=async (req,res)=>{
+    try {
+        let leaves = await LeaveRequest.find({ user: req.user.id });
+        res.status(200).json(leaves);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+}
+
+module.exports={leaveUser,getAllleaves};

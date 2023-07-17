@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { registerAdmin, loginAdmin, } = require('../controllers/Admin/adminController');
 const { getAllUsers } = require("../controllers/Admin/getAllUsers")
-const { updateAttendance, addAttendance, deleteAttendance, attendanceRecord,AllRecord } = require("../controllers/Admin/userAttendance");
+const { updateAttendance, addAttendance, deleteAttendance, attendanceRecord,AllRecord,AllAttendance } = require("../controllers/Admin/userAttendance");
 const {updateGrade}=require('../controllers/Admin/userGrade')
 const {allLeaves,updateRequest}=require("../controllers/Admin/userLeaves")
 //authentication twt
@@ -24,6 +24,7 @@ router.post('/addAttendance/:_id', authAdmin, addAttendance);
 router.delete('/deleteAttendance/:_id/:atid', authAdmin, deleteAttendance);
 router.get('/record/report/users/:_id', authAdmin, attendanceRecord);
 router.get('/record/report/allusers', authAdmin, AllRecord);
+router.get('/record/allusers', authAdmin, AllAttendance);
 //leaves of user
 router.get('/leaves/users',authAdmin,allLeaves);
 router.put('/leaves/users/:reqid',authAdmin,updateRequest);

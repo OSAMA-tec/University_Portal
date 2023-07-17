@@ -12,15 +12,15 @@ const GradeCalculation=async (userId,marks)=>{
             marks=marks+50;
             grade='A';
         }
-        else if(report.presentCount<26||report.presentCount>20){
+        else if(report.presentCount<26&&report.presentCount>20){
             marks=marks+30;
             grade="B";
         }
-        else if(report.presentCount<20||report.presentCount>15){
+        else if(report.presentCount<20&&report.presentCount>15){
             marks=marks+10;
             grade="C";
         }
-        else if(report.presentCount<15||report.presentCount>5){
+        else if(report.presentCount<15&&report.presentCount>5){
             marks=marks+5;
             grade="D";
         }
