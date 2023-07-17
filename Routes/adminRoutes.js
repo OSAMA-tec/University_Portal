@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 const { registerAdmin, loginAdmin, } = require('../controllers/Admin/adminController');
 const { getAllUsers } = require("../controllers/Admin/getAllUsers")
@@ -30,5 +31,36 @@ router.put('/leaves/users/:reqid',authAdmin,updateRequest);
 //grades
 router.put('/grade/users/:_id',authAdmin,updateGrade);
 
+
+
+
+
+
+
+
+
+
+//for frontend verification
+
+router.get('/whoami', (req, res) => {
+    const token = req.header('x-auth-token');
+
+    if (!token) {
+        return res.status(401).json({ msg: 'No token, authorization denied' });
+    }
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        return res.json({ role: 'user' });
+    } catch (err) {
+        try {
+            jwt.verify(token, process.env.JWT_SECRET_Admin);
+            return res.json({ role: 'admin' });
+        } catch (err) {
+            console.error('something wrong with auth middleware', err);
+            return res.status(500).json({ msg: 'Server Error' });
+        }
+    }
+});
 
 module.exports = router;
