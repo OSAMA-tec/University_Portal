@@ -2,9 +2,9 @@
     "version": 2,
     "name": "Student-Portal",
     "builds": [
-       { "src": "server.js", "use": "@vercel/node" }
+       { "src": "app.js", "use": "@vercel/node" }
     ],
     "routes": [
-       { "src": "/(.*)", "dest": "/server.js" }
+       { "src": "/(.*)", "dest": "/app.js" }
     ]
  }
