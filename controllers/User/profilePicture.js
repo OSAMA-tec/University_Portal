@@ -15,7 +15,7 @@ const profilePicture=async (req,res)=>{
             return res.status(404).json({ msg: 'User not found' });
         }
 
-        user.profilePicture = req.file.path;
+        user.profilePicture = req.file.filename;
 
         await user.save();
 

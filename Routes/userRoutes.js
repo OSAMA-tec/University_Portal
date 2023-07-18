@@ -2,19 +2,45 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
-const dir = './uploads';
+const crypto = require('crypto');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const mongoose = require('mongoose');
 
-if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-}
 const {registerUser,loginUser,getUserProfile} = require('../controllers/User/userController');
-const { userAttendance,getUserAttendance} = require('../controllers/User/userAttendance');
-const {profilePicture}=require('../controllers/User/profilePicture')
-const {leaveUser,getAllleaves}=require('../controllers/User/leaveUser')
-
-
+const {userAttendance,getUserAttendance} = require('../controllers/User/userAttendance');
+const {profilePicture} = require('../controllers/User/profilePicture')
+const {leaveUser,getAllleaves} = require('../controllers/User/leaveUser')
 const {auth} = require('../Middlewares/authMiddleware');
+
+let gfs;
+const conn = mongoose.connection;
+conn.once('open', () => {
+  // Initialize our stream
+  gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: 'uploads'
+  });
+});
+
+const storage = new GridFsStorage({
+  db: conn,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+
+const upload = multer({ storage });
 
 // Register a new user
 router.post('/register',registerUser);
@@ -30,21 +56,19 @@ router.get('/profile', auth, getUserProfile);
 router.post('/leave-user',auth,leaveUser);
 router.get('/leaves',auth,getAllleaves);
 
-
 //profile picture
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+router.put('/profile-picture', auth, upload.single('profilePicture'), profilePicture);
+
+// Route for getting image
+router.get('/image/:filename', (req, res) => {
+  gfs.find({ filename: req.params.filename }).toArray((err, files) => {
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        err: "no files exist",
+      });
     }
+    gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+  });
 });
-
-const upload = multer({ storage: storage });
-
-router.put('/profile-picture', auth, upload.single('profilePicture'),profilePicture);
-
-
 
 module.exports = router;
